@@ -17,3 +17,6 @@ cloudfunctions/*/node_modules/
 *.swp
 *.swo
 *~
+
+# 文档（排除特定说明文档）
+微信小程序发布全攻略.md

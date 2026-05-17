@@ -1,10 +1,64 @@
 /**app.wxss**/
+
+/* ========== 设计令牌 ========== */
 page {
   height: 100%;
-  background-color: #f5f5f5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* 主色调 - 陶土橙 */
+  --color-primary: #E07040;
+  --color-primary-dark: #C55A2E;
+  --color-primary-light: #FDF0EA;
+  --color-primary-gradient: linear-gradient(135deg, #E07040, #F0A070);
+
+  /* 辅色调 - 青碧 */
+  --color-accent: #3A7D74;
+  --color-accent-light: #EAF5F3;
+
+  /* 背景 */
+  --color-bg: #F7F5F2;
+  --color-bg-card: #FFFFFF;
+  --color-bg-input: #F0EDE9;
+
+  /* 文字 */
+  --color-text: #2C2824;
+  --color-text-secondary: #8A7F74;
+  --color-text-tertiary: #BDB2A6;
+
+  /* 边框 */
+  --color-border: #E8E2DA;
+  --color-border-light: #F3EFEA;
+
+  /* 语义色 */
+  --color-danger: #D94A5A;
+  --color-danger-light: #FDE8EC;
+  --color-success: #2A9D8F;
+  --color-warning: #F0A070;
+
+  /* 阴影 */
+  --shadow-sm: 0 1rpx 4rpx rgba(44, 40, 36, 0.05);
+  --shadow-md: 0 4rpx 16rpx rgba(44, 40, 36, 0.07);
+  --shadow-lg: 0 8rpx 32rpx rgba(44, 40, 36, 0.10);
+
+  /* 圆角 */
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+
+  /* 字体大小 */
+  --font-xs: 22rpx;
+  --font-sm: 24rpx;
+  --font-md: 28rpx;
+  --font-lg: 32rpx;
+  --font-xl: 36rpx;
+  --font-2xl: 48rpx;
+
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
-.container {
-  padding: 20rpx;
+/* ========== 通用工具类 ========== */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
