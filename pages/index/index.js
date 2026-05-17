@@ -235,5 +235,31 @@ Page({
         }
       }
     })
+  },
+
+  onDeleteMyLink(e) {
+    const { id: linkId, title: linkTitle } = e.currentTarget.dataset
+    wx.showModal({
+      title: '删除口令',
+      content: `确认删除「${linkTitle}」？`,
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            const res = await wx.cloud.callFunction({
+              name: 'deleteMyLink',
+              data: { linkId }
+            })
+            if (res.result.success) {
+              wx.showToast({ title: '已删除', icon: 'success' })
+              this.setData({ links: this.data.links.filter(l => l._id !== linkId) })
+            } else {
+              wx.showToast({ title: res.result.message, icon: 'none' })
+            }
+          } catch (err) {
+            wx.showToast({ title: '删除失败', icon: 'error' })
+          }
+        }
+      }
+    })
   }
 })

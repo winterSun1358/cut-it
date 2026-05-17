@@ -58,7 +58,8 @@
 
         <view class="card-footer">
           <view class="footer-left">
-            <button wx:if="{{isAdmin || myOpenid === item._openid}}" class="delete-btn" size="mini" bindtap="onAdminDelete" data-id="{{item._id}}" data-title="{{item.title}}">删除</button>
+            <button wx:if="{{isAdmin}}" class="delete-btn" size="mini" bindtap="onAdminDelete" data-id="{{item._id}}" data-title="{{item.title}}">删除(管理员)</button>
+            <button wx:elif="{{myOpenid === item._openid}}" class="delete-btn" size="mini" bindtap="onDeleteMyLink" data-id="{{item._id}}" data-title="{{item.title}}">删除</button>
             <button class="report-btn" size="mini" bindtap="onReport" data-id="{{item._id}}" data-title="{{item.title}}">举报</button>
           </view>
           <button class="copy-btn {{item.copied ? 'copied' : ''}}" size="mini" bindtap="onCopyLink" data-id="{{item._id}}" data-url="{{item.url}}" data-copied="{{item.copied}}" data-openid="{{item._openid}}" disabled="{{item.copied}}">
