@@ -1,0 +1,9 @@
+{
+  "name": "expireMyLink",
+  "version": "1.0.0",
+  "description": "用户使自己的链接失效",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

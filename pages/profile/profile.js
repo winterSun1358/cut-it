@@ -11,8 +11,15 @@ Page({
     loading: true,
     activeTab: 2,
     saving: false,
-    linkFilter: 'all', // all | active | expired
-    statusBarHeight: app.globalData.statusBarHeight || 44
+    linkFilter: 'all',
+    statusBarHeight: app.globalData.statusBarHeight || 44,
+
+    // 管理员举报面板
+    isAdmin: false,
+    showReports: false,
+    reports: [],
+    reportsLoading: false,
+    expandedReport: null
   },
 
   onLoad() {
@@ -24,16 +31,19 @@ Page({
     if (this.data.quota !== app.globalData.quota) {
       this.setData({ quota: app.globalData.quota || 0 })
     }
+    this.loadMyLinks()
   },
 
   loadProfile() {
     const info = app.globalData.userInfo || {}
+    const isAdmin = app.globalData.userInfo?.isAdmin || false
     this.setData({
       userInfo: {
-        avatarUrl: info.avatarUrl || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
+        avatarUrl: info.avatarUrl || '',
         nickName: info.nickName || '微信用户'
       },
-      quota: app.globalData.quota || 0
+      quota: app.globalData.quota || 0,
+      isAdmin
     })
   },
 
@@ -45,7 +55,9 @@ Page({
         this.setData({ myLinks: res.result.data || [] })
         this.applyLinkFilter()
       }
-    } catch (err) {}
+    } catch (err) {
+      wx.showToast({ title: '加载失败', icon: 'error' })
+    }
     this.setData({ loading: false })
   },
 
@@ -97,24 +109,68 @@ Page({
 
     this.setData({ saving: true })
     try {
+      let avatarUrl = this.data.userInfo.avatarUrl
+
+      // 如果头像临时文件，上传到云存储获得永久链接
+      if (avatarUrl && (avatarUrl.startsWith('wxfile') || avatarUrl.startsWith('http://tmp'))) {
+        wx.showLoading({ title: '上传头像中...' })
+        const openid = app.globalData.openid
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath: `avatars/${openid}_${Date.now()}.jpg`,
+          filePath: avatarUrl,
+        })
+        wx.hideLoading()
+        avatarUrl = uploadRes.fileID
+        this.setData({ 'userInfo.avatarUrl': avatarUrl })
+      }
+
       const res = await wx.cloud.callFunction({
         name: 'updateProfile',
-        data: { nickName, avatarUrl: this.data.userInfo.avatarUrl }
+        data: { nickName, avatarUrl }
       })
       if (res.result.success) {
-        app.globalData.userInfo = { ...app.globalData.userInfo, nickName, avatarUrl: this.data.userInfo.avatarUrl }
+        app.globalData.userInfo = { ...app.globalData.userInfo, nickName, avatarUrl }
         this.setData({ 'userInfo.nickName': nickName, editMode: false })
         wx.showToast({ title: '保存成功', icon: 'success' })
       } else {
         wx.showToast({ title: res.result.message, icon: 'none' })
       }
     } catch (err) {
+      wx.hideLoading()
       wx.showToast({ title: '保存失败', icon: 'error' })
     }
     this.setData({ saving: false })
   },
 
-  onDeleteLink(e) {
+  // 使链接失效
+  async onExpireLink(e) {
+    const linkId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '设为失效',
+      content: '设为失效后其他用户将无法看到此口令，确定继续？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            const res = await wx.cloud.callFunction({
+              name: 'expireMyLink',
+              data: { linkId }
+            })
+            if (res.result.success) {
+              wx.showToast({ title: '已设为失效', icon: 'success' })
+              this.loadMyLinks()
+            } else {
+              wx.showToast({ title: res.result.message, icon: 'none' })
+            }
+          } catch (err) {
+            wx.showToast({ title: '操作失败', icon: 'error' })
+          }
+        }
+      }
+    })
+  },
+
+  // 删除链接（已失效的记录）
+  async onDeleteLink(e) {
     const linkId = e.currentTarget.dataset.id
     wx.showModal({
       title: '确认删除',
@@ -122,9 +178,73 @@ Page({
       success: async (res) => {
         if (res.confirm) {
           try {
-            await wx.cloud.database().collection('links').doc(linkId).update({ data: { status: 'deleted' } })
-            wx.showToast({ title: '已删除', icon: 'success' })
-            this.loadMyLinks()
+            const res = await wx.cloud.callFunction({
+              name: 'deleteMyLink',
+              data: { linkId }
+            })
+            if (res.result.success) {
+              wx.showToast({ title: '已删除', icon: 'success' })
+              this.loadMyLinks()
+            } else {
+              wx.showToast({ title: res.result.message, icon: 'none' })
+            }
+          } catch (err) {
+            wx.showToast({ title: '删除失败', icon: 'error' })
+          }
+        }
+      }
+    })
+  },
+
+  // ===== 管理员举报面板 =====
+  toggleReports() {
+    if (!this.data.showReports) {
+      this.loadReports()
+    }
+    this.setData({ showReports: !this.data.showReports, expandedReport: null })
+  },
+
+  async loadReports() {
+    this.setData({ reportsLoading: true })
+    try {
+      const res = await wx.cloud.callFunction({ name: 'getReports' })
+      if (res.result.success) {
+        this.setData({ reports: res.result.data || [] })
+      } else {
+        wx.showToast({ title: res.result.message, icon: 'none' })
+      }
+    } catch (err) {
+      wx.showToast({ title: '加载失败', icon: 'error' })
+    }
+    this.setData({ reportsLoading: false })
+  },
+
+  toggleReportDetail(e) {
+    const linkId = e.currentTarget.dataset.linkid
+    this.setData({
+      expandedReport: this.data.expandedReport === linkId ? null : linkId
+    })
+  },
+
+  onAdminDeleteFromReport(e) {
+    const linkId = e.currentTarget.dataset.linkid
+    wx.showModal({
+      title: '管理员删除',
+      content: '确认从举报面板删除此链接？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            const res = await wx.cloud.callFunction({
+              name: 'adminDeleteLink',
+              data: { linkId }
+            })
+            if (res.result.success) {
+              wx.showToast({ title: '已删除', icon: 'success' })
+              this.loadReports()
+              this.loadMyLinks()
+            } else {
+              wx.showToast({ title: res.result.message, icon: 'none' })
+            }
           } catch (err) {
             wx.showToast({ title: '删除失败', icon: 'error' })
           }
