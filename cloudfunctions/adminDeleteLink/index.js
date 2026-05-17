@@ -16,11 +16,8 @@ exports.main = async (event, context) => {
     return { success: false, message: '无权限执行此操作' }
   }
 
-  // 删除链接（软删除，将 status 改为 deleted）
   try {
-    await db.collection('links').doc(linkId).update({
-      data: { status: 'deleted' }
-    })
+    await db.collection('links').doc(linkId).remove()
     return { success: true, message: '已删除' }
   } catch (err) {
     return { success: false, message: '删除失败' }

@@ -19,9 +19,7 @@ exports.main = async (event, context) => {
       return { success: false, message: '只能删除自己的链接' }
     }
 
-    await db.collection('links').doc(linkId).update({
-      data: { status: 'deleted' }
-    })
+    await db.collection('links').doc(linkId).remove()
     return { success: true, message: '已删除' }
   } catch (err) {
     return { success: false, message: '删除失败' }
