@@ -23,15 +23,22 @@ Page({
     quota: 0,
     submitting: false,
     activeTab: 1,
+    isAdmin: false,
     statusBarHeight: app.globalData.statusBarHeight || 44
   },
 
   onLoad() {
-    this.setData({ quota: app.globalData.quota || 0 })
+    this.setData({
+      quota: app.globalData.quota || 0,
+      isAdmin: app.globalData.userInfo?.isAdmin || false
+    })
   },
 
   onShow() {
-    this.setData({ quota: app.globalData.quota || 0 })
+    this.setData({
+      quota: app.globalData.quota || 0,
+      isAdmin: app.globalData.userInfo?.isAdmin || false
+    })
   },
 
   onTitleInput(e) { this.setData({ title: e.detail.value }) },
@@ -60,7 +67,7 @@ Page({
     if (!url.trim()) { wx.showToast({ title: '请输入助力口令', icon: 'none' }); return }
     if (!platform) { wx.showToast({ title: '请选择所属平台', icon: 'none' }); return }
     if (!expireHours) { wx.showToast({ title: '请选择口令有效期', icon: 'none' }); return }
-    if (app.globalData.quota <= 0) { wx.showToast({ title: '额度不足', icon: 'none' }); return }
+    if (!app.globalData.userInfo?.isAdmin && app.globalData.quota <= 0) { wx.showToast({ title: '额度不足', icon: 'none' }); return }
 
     this.setData({ submitting: true })
 
@@ -71,7 +78,9 @@ Page({
       })
 
       if (res.result.success) {
-        app.globalData.quota = (app.globalData.quota || 0) - 1
+        if (!app.globalData.userInfo?.isAdmin) {
+          app.globalData.quota = (app.globalData.quota || 0) - 1
+        }
         wx.showToast({ title: '发布成功！', icon: 'success' })
         setTimeout(() => wx.reLaunch({ url: '/pages/index/index' }), 1000)
       } else {

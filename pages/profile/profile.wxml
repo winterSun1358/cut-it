@@ -65,65 +65,14 @@
     </view>
   </view>
 
-  <!-- ====== 管理员举报面板 ====== -->
-  <view wx:if="{{isAdmin}}" class="section admin-section">
-    <view class="section-header admin-header" bindtap="toggleReports">
+  <!-- ====== 管理员入口 ====== -->
+  <view wx:if="{{isAdmin}}" class="section admin-section" bindtap="goReports">
+    <view class="section-header">
       <text class="section-title">举报管理</text>
-      <text class="expand-arrow">{{showReports ? '收起 ▲' : '展开 ▼'}}</text>
+      <text class="report-entry-arrow">›</text>
     </view>
-
-    <view wx:if="{{showReports}}">
-      <view wx:if="{{reportsLoading}}" class="loading"><text>加载中...</text></view>
-      <view wx:elif="{{reports.length === 0}}" class="empty"><text>暂无举报记录</text></view>
-
-      <view wx:else class="report-list">
-        <view class="report-card" wx:for="{{reports}}" wx:key="linkId">
-          <view class="report-header" bindtap="toggleReportDetail" data-linkid="{{item.linkId}}">
-            <view class="report-info">
-              <text class="report-title">{{item.linkTitle}}</text>
-              <text class="report-badge">{{item.count}}次举报</text>
-            </view>
-            <text class="report-status {{item.linkStatus}}">
-              {{item.linkStatus === 'active' ? '进行中' : '已处理'}}
-            </text>
-          </view>
-
-          <!-- 举报详情（展开） -->
-          <view wx:if="{{expandedReport === item.linkId}}" class="report-detail">
-            <view class="detail-row">
-              <text class="detail-label">链接地址</text>
-              <text class="detail-text">{{item.linkUrl || '无'}}</text>
-            </view>
-            <view class="detail-row">
-              <text class="detail-label">发布者</text>
-              <text class="detail-text">{{item.linkPublisher}}</text>
-            </view>
-            <view class="detail-row">
-              <text class="detail-label">所属平台</text>
-              <text class="detail-text">{{item.linkPlatform || '未标注'}}</text>
-            </view>
-
-            <view class="detail-section">
-              <text class="detail-label">举报原因统计</text>
-              <view class="reason-list">
-                <view class="reason-item" wx:for="{{item.reasons}}" wx:key="reason">
-                  <text class="reason-name">{{item.reason}}</text>
-                  <text class="reason-count">{{item.count}}次</text>
-                </view>
-              </view>
-            </view>
-
-            <view class="detail-section">
-              <text class="detail-label">举报人</text>
-              <view class="reporter-list">
-                <text class="reporter-item" wx:for="{{item.reporters}}" wx:key="openid">{{item.nickName}}</text>
-              </view>
-            </view>
-
-            <button class="admin-delete-btn" size="mini" data-linkid="{{item.linkId}}" bindtap="onAdminDeleteFromReport">删除此链接</button>
-          </view>
-        </view>
-      </view>
+    <view class="admin-hint">
+      <text>查看被举报的链接、举报次数、原因及举报人</text>
     </view>
   </view>
 

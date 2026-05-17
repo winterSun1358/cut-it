@@ -26,6 +26,12 @@
   color: #333;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
 .quota-badge {
   display: flex;
   align-items: center;
@@ -38,6 +44,21 @@
 .quota-text {
   font-size: 26rpx;
   color: #07c160;
+  font-weight: 600;
+}
+
+.admin-btn {
+  display: flex;
+  align-items: center;
+  background: #fff2e6;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  border: 1rpx solid #ffd6b3;
+}
+
+.admin-btn-text {
+  font-size: 24rpx;
+  color: #e65c00;
   font-weight: 600;
 }
 

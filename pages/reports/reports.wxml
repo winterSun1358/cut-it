@@ -1,0 +1,91 @@
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="header-inner">
+      <view class="header-left" bindtap="goBack">
+        <text class="back-btn">‹ 返回</text>
+      </view>
+      <text class="header-title">举报管理</text>
+      <view class="header-right">
+        <text class="refresh-btn" bindtap="loadReports">刷新</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view wx:if="{{loading}}" class="loading"><text>加载中...</text></view>
+
+    <view wx:elif="{{reports.length === 0}}" class="empty">
+      <text class="empty-icon">✓</text>
+      <text class="empty-text">暂无举报记录</text>
+    </view>
+
+    <view wx:else class="stats-bar">
+      <text class="stats-text">共 {{reports.length}} 条被举报链接</text>
+    </view>
+
+    <view class="report-list">
+      <view class="report-card" wx:for="{{reports}}" wx:key="linkId">
+        <!-- 卡片头部 -->
+        <view class="card-header" bindtap="toggleDetail" data-linkid="{{item.linkId}}">
+          <view class="card-header-left">
+            <text class="card-title">{{item.linkTitle}}</text>
+            <text class="report-badge">{{item.count}}次举报</text>
+          </view>
+          <view class="card-header-right">
+            <text class="link-status-tag {{item.linkStatus}}">
+              {{item.linkStatus === 'active' ? '进行中' : '已处理'}}
+            </text>
+            <text class="expand-icon">{{expandedReport === item.linkId ? '▲' : '▼'}}</text>
+          </view>
+        </view>
+
+        <!-- 举报详情（展开） -->
+        <view wx:if="{{expandedReport === item.linkId}}" class="card-detail">
+          <view class="detail-section">
+            <view class="detail-row">
+              <text class="detail-label">链接地址</text>
+              <text class="detail-value selectable">{{item.linkUrl || '无'}}</text>
+            </view>
+            <view class="detail-row">
+              <text class="detail-label">发布者</text>
+              <text class="detail-value">{{item.linkPublisher}}</text>
+            </view>
+            <view class="detail-row">
+              <text class="detail-label">所属平台</text>
+              <text class="detail-value">{{item.linkPlatform || '未标注'}}</text>
+            </view>
+          </view>
+
+          <view class="divider"></view>
+
+          <view class="detail-section">
+            <text class="section-label">举报原因统计</text>
+            <view class="reason-list">
+              <view class="reason-item" wx:for="{{item.reasons}}" wx:key="reason">
+                <text class="reason-name">{{item.reason}}</text>
+                <text class="reason-sep">·</text>
+                <text class="reason-count">{{item.count}}次</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="divider"></view>
+
+          <view class="detail-section">
+            <text class="section-label">举报人</text>
+            <view class="reporter-list">
+              <text class="reporter-tag" wx:for="{{item.reporters}}" wx:key="openid">{{item.nickName}}</text>
+            </view>
+          </view>
+
+          <view class="divider"></view>
+
+          <view class="detail-actions">
+            <button class="delete-link-btn" data-linkid="{{item.linkId}}" bindtap="onDeleteLink">删除此链接</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

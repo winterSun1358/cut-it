@@ -24,18 +24,21 @@ exports.main = async (event, context) => {
     if (err.errCode === 87014) return { success: false, message: '标题包含违规内容' }
   }
 
-  // 检查额度
+  // 检查额度（管理员无限额度）
   const userResult = await db.collection('users').where({ _openid: OPENID }).get()
   if (userResult.data.length === 0) return { success: false, message: '用户不存在' }
-  if (userResult.data[0].quota <= 0) return { success: false, message: '额度不足' }
+  const isAdmin = userResult.data[0].isAdmin || false
+  if (!isAdmin && userResult.data[0].quota <= 0) return { success: false, message: '额度不足' }
 
   // 计算过期时间
   const expiresAt = new Date(Date.now() + expireHours * 60 * 60 * 1000)
 
   try {
-    await db.collection('users').where({ _openid: OPENID }).update({
-      data: { quota: db.command.inc(-1) }
-    })
+    if (!isAdmin) {
+      await db.collection('users').where({ _openid: OPENID }).update({
+        data: { quota: db.command.inc(-1) }
+      })
+    }
 
     await db.collection('links').add({
       data: {

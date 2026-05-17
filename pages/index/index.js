@@ -261,5 +261,9 @@ Page({
         }
       }
     })
+  },
+
+  onGoReports() {
+    wx.navigateTo({ url: '/pages/reports/reports' })
   }
 })

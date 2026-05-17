@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/profile/profile",
-    "pages/publish/publish"
+    "pages/publish/publish",
+    "pages/reports/reports"
   ],
   "window": {
     "navigationBarTextStyle": "black",

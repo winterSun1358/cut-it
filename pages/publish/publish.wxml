@@ -37,13 +37,16 @@
       <textarea class="form-textarea" placeholder="粘贴助力口令或链接地址" value="{{url}}" bindinput="onUrlInput" maxlength="500" auto-height />
     </view>
 
-    <view class="form-hint">发布消耗 1 次额度，当前额度: {{quota}}</view>
+    <view class="form-hint">
+      <text wx:if="{{isAdmin}}">管理员无限额度</text>
+      <text wx:else>发布消耗 1 次额度，当前额度: {{quota}}</text>
+    </view>
 
-    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting || quota <= 0}}">
+    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting || (!isAdmin && quota <= 0)}}">
       {{submitting ? '发布中...' : '发布口令'}}
     </button>
 
-    <view wx:if="{{quota <= 0}}" class="no-quota-hint">额度不足，去助力大厅复制口令获取额度</view>
+    <view wx:if="{{!isAdmin && quota <= 0}}" class="no-quota-hint">额度不足，去助力大厅复制口令获取额度</view>
   </view>
 
   <!-- 底部TabBar -->

@@ -14,12 +14,7 @@ Page({
     linkFilter: 'all',
     statusBarHeight: app.globalData.statusBarHeight || 44,
 
-    // 管理员举报面板
-    isAdmin: false,
-    showReports: false,
-    reports: [],
-    reportsLoading: false,
-    expandedReport: null
+    isAdmin: false
   },
 
   onLoad() {
@@ -200,60 +195,8 @@ Page({
     })
   },
 
-  // ===== 管理员举报面板 =====
-  toggleReports() {
-    if (!this.data.showReports) {
-      this.loadReports()
-    }
-    this.setData({ showReports: !this.data.showReports, expandedReport: null })
-  },
-
-  async loadReports() {
-    this.setData({ reportsLoading: true })
-    try {
-      const res = await wx.cloud.callFunction({ name: 'getReports' })
-      if (res.result.success) {
-        this.setData({ reports: res.result.data || [] })
-      } else {
-        wx.showToast({ title: res.result.message, icon: 'none' })
-      }
-    } catch (err) {
-      wx.showToast({ title: '加载失败', icon: 'error' })
-    }
-    this.setData({ reportsLoading: false })
-  },
-
-  toggleReportDetail(e) {
-    const linkId = e.currentTarget.dataset.linkid
-    this.setData({
-      expandedReport: this.data.expandedReport === linkId ? null : linkId
-    })
-  },
-
-  onAdminDeleteFromReport(e) {
-    const linkId = e.currentTarget.dataset.linkid
-    wx.showModal({
-      title: '管理员删除',
-      content: '确认从举报面板删除此链接？',
-      success: async (res) => {
-        if (res.confirm) {
-          try {
-            const res = await wx.cloud.callFunction({
-              name: 'adminDeleteLink',
-              data: { linkId }
-            })
-            if (res.result.success) {
-              wx.showToast({ title: '已删除', icon: 'success' })
-              this.loadReports()
-              this.loadMyLinks()
-            } else {
-              wx.showToast({ title: res.result.message, icon: 'none' })
-            }
-          } catch (err) {
-            wx.showToast({ title: '删除失败', icon: 'error' })
-          }
-        }
-      }
-    })
+  // ===== 管理员入口 =====
+  goReports() {
+    wx.navigateTo({ url: '/pages/reports/reports' })
   }
 })

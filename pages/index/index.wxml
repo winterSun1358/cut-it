@@ -3,8 +3,13 @@
   <view class="header" style="padding-top: {{statusBarHeight}}px;">
     <view class="header-inner">
       <view class="header-title">助力大厅</view>
-      <view class="quota-badge" bindtap="switchTab" data-index="2">
-        <text class="quota-text">额度: {{quota}}</text>
+      <view class="header-actions">
+        <view wx:if="{{isAdmin}}" class="admin-btn" bindtap="onGoReports">
+          <text class="admin-btn-text">举报管理</text>
+        </view>
+        <view class="quota-badge" bindtap="switchTab" data-index="2">
+          <text class="quota-text">额度: {{quota}}</text>
+        </view>
       </view>
     </view>
   </view>

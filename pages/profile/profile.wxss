@@ -146,154 +146,25 @@
   line-height: 48rpx; height: 48rpx; border-radius: 24rpx;
 }
 
-/* ====== 管理员举报面板 ====== */
+/* ====== 管理员入口 ====== */
 .admin-section {
   margin-top: 20rpx;
   border-radius: 20rpx;
   flex: 0;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.admin-header {
   cursor: pointer;
   user-select: none;
 }
 
-.expand-arrow {
+.report-entry-arrow {
+  font-size: 36rpx;
+  color: #ccc;
+  font-weight: 300;
+}
+
+.admin-hint {
   font-size: 24rpx;
-  color: #07c160;
-  font-weight: 500;
-}
-
-.report-list {
-  padding-top: 8rpx;
-}
-
-.report-card {
-  background: #fafafa;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  margin-bottom: 12rpx;
-  border: 1rpx solid #f0f0f0;
-}
-
-.report-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.report-info {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  flex: 1;
-  min-width: 0;
-}
-
-.report-title {
-  font-size: 26rpx;
-  font-weight: 500;
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 300rpx;
-}
-
-.report-badge {
-  font-size: 22rpx;
-  color: #fff;
-  background: #ff6b6b;
-  padding: 2rpx 16rpx;
-  border-radius: 20rpx;
-  flex-shrink: 0;
-}
-
-.report-status { font-size: 22rpx; padding: 4rpx 16rpx; border-radius: 20rpx; flex-shrink: 0; }
-.report-status.active { background: #f0f8ff; color: #07c160; }
-.report-status.deleted, .report-status.expired { background: #f5f5f5; color: #999; }
-
-/* 举报详情 */
-.report-detail {
-  margin-top: 16rpx;
-  padding-top: 16rpx;
-  border-top: 1rpx solid #eee;
-}
-
-.detail-row {
-  display: flex;
-  margin-bottom: 8rpx;
-  font-size: 24rpx;
-}
-
-.detail-label {
-  color: #888;
-  width: 140rpx;
-  flex-shrink: 0;
-}
-
-.detail-text {
-  color: #333;
-  flex: 1;
-  word-break: break-all;
-}
-
-.detail-section {
-  margin-top: 12rpx;
-  margin-bottom: 12rpx;
-}
-
-.detail-section .detail-label {
-  display: block;
-  margin-bottom: 8rpx;
-}
-
-.reason-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8rpx;
-}
-
-.reason-item {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  background: #fff;
-  border: 1rpx solid #e5e5e5;
-  border-radius: 16rpx;
-  padding: 4rpx 16rpx;
-}
-
-.reason-name { font-size: 22rpx; color: #666; }
-.reason-count { font-size: 22rpx; color: #ff6b6b; font-weight: 600; }
-
-.reporter-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8rpx;
-}
-
-.reporter-item {
-  font-size: 22rpx;
-  color: #666;
-  background: #f5f5f5;
-  padding: 4rpx 16rpx;
-  border-radius: 16rpx;
-}
-
-.admin-delete-btn {
-  width: 100%;
-  margin-top: 12rpx;
-  background: #fff2f2;
-  color: #ff4444;
-  font-size: 24rpx;
-  border: 1rpx solid #ffcccc;
-  border-radius: 24rpx;
-  line-height: 56rpx;
-  height: 56rpx;
+  color: #999;
+  margin-top: -8rpx;
 }
 
 /* 底部TabBar */
