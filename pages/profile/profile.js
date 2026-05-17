@@ -29,14 +29,23 @@ Page({
     this.loadMyLinks()
   },
 
-  loadProfile() {
+  async loadProfile() {
     const info = app.globalData.userInfo || {}
     const isAdmin = app.globalData.userInfo?.isAdmin || false
+    let avatarUrl = info.avatarUrl || ''
+
+    // cloud:// 文件 ID 转为临时 HTTP URL 以便显示
+    if (avatarUrl && avatarUrl.startsWith('cloud://')) {
+      try {
+        const res = await wx.cloud.getTempFileURL({ fileList: [avatarUrl] })
+        if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+          avatarUrl = res.fileList[0].tempFileURL
+        }
+      } catch (e) {}
+    }
+
     this.setData({
-      userInfo: {
-        avatarUrl: info.avatarUrl || '',
-        nickName: info.nickName || '微信用户'
-      },
+      userInfo: { avatarUrl, nickName: info.nickName || '微信用户' },
       quota: app.globalData.quota || 0,
       isAdmin
     })
@@ -116,6 +125,13 @@ Page({
         })
         wx.hideLoading()
         avatarUrl = uploadRes.fileID
+        // 转为临时 HTTP URL 以便所有用户可见
+        try {
+          const tres = await wx.cloud.getTempFileURL({ fileList: [avatarUrl] })
+          if (tres.fileList && tres.fileList[0] && tres.fileList[0].tempFileURL) {
+            avatarUrl = tres.fileList[0].tempFileURL
+          }
+        } catch (e) {}
         this.setData({ 'userInfo.avatarUrl': avatarUrl })
       }
 

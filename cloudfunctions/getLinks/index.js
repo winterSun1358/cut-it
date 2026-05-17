@@ -52,5 +52,22 @@ exports.main = async (event, context) => {
     copied: copiedLinkIds.has(l._id)
   }))
 
+  // 将 cloud:// 头像 ID 转为可公开访问的临时 URL
+  const cloudAvatarLinks = linkList
+    .map(l => l.publisherAvatar)
+    .filter(url => url && url.startsWith('cloud://'))
+  if (cloudAvatarLinks.length > 0) {
+    try {
+      const { fileList } = await cloud.getTempFileURL({ fileList: cloudAvatarLinks })
+      const urlMap = {}
+      fileList.forEach(f => { urlMap[f.fileID] = f.tempFileURL })
+      linkList.forEach(l => {
+        if (urlMap[l.publisherAvatar]) l.publisherAvatar = urlMap[l.publisherAvatar]
+      })
+    } catch (e) {
+      // 降级：保持原值
+    }
+  }
+
   return { success: true, data: linkList }
 }
