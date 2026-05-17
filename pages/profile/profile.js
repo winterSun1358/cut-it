@@ -157,7 +157,10 @@ Page({
             })
             if (res.result.success) {
               wx.showToast({ title: '已设为失效', icon: 'success' })
-              this.loadMyLinks()
+              const myLinks = this.data.myLinks.map(l =>
+                l._id === linkId ? { ...l, status: 'expired' } : l
+              )
+              this.setData({ myLinks }, () => this.applyLinkFilter())
             } else {
               wx.showToast({ title: res.result.message, icon: 'none' })
             }
@@ -184,7 +187,8 @@ Page({
             })
             if (res.result.success) {
               wx.showToast({ title: '已删除', icon: 'success' })
-              this.loadMyLinks()
+              const myLinks = this.data.myLinks.filter(l => l._id !== linkId)
+              this.setData({ myLinks }, () => this.applyLinkFilter())
             } else {
               wx.showToast({ title: res.result.message, icon: 'none' })
             }
