@@ -17,7 +17,14 @@ exports.main = async (event, context) => {
   }
 
   if (OPENID === publisherOpenid) {
-    return { success: false, message: '不能复制自己的链接' }
+    // 复制自己的链接不增加额度
+    const selfResult = await db.collection('users').where({ _openid: OPENID }).get()
+    return {
+      success: true,
+      isOwn: true,
+      quota: selfResult.data[0]?.quota || 0,
+      message: '复制自己的口令无法增加额度'
+    }
   }
 
   // 检查是否已经复制过这条链接

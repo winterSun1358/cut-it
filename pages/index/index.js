@@ -165,6 +165,10 @@ Page({
       if (res.result.success) {
         this.setData({ quota: res.result.quota })
         app.globalData.quota = res.result.quota
+        if (res.result.isOwn) {
+          wx.showToast({ title: res.result.message || '复制自己的口令无法增加额度', icon: 'none' })
+          return
+        }
         const links = this.data.links.map(l => {
           if (l._id === linkId) l.copied = true
           return l
