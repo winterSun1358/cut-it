@@ -1,0 +1,257 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+/* 顶部导航 */
+.header {
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+  flex-shrink: 0;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  height: 44rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.quota-badge {
+  display: flex;
+  align-items: center;
+  background: #f0f8ff;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  border: 1rpx solid #b3d9ff;
+}
+
+.quota-text {
+  font-size: 26rpx;
+  color: #07c160;
+  font-weight: 600;
+}
+
+/* 平台筛选标签 */
+.platform-tabs {
+  background: #fff;
+  white-space: nowrap;
+  padding: 16rpx 20rpx;
+  flex-shrink: 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.platform-tabs .tab-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 28rpx;
+  margin-right: 16rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #f5f5f5;
+}
+
+.platform-tabs .tab-item.active {
+  color: #fff;
+  background: #07c160;
+  font-weight: 600;
+}
+
+/* 列表 */
+.list {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 20rpx;
+}
+
+.login-prompt {
+  display: flex;
+  justify-content: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 150rpx 0;
+}
+
+.empty-icon {
+  font-size: 96rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #ccc;
+}
+
+/* 链接卡片 */
+.link-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.publisher-name {
+  font-size: 26rpx;
+  color: #666;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 平台标签颜色 */
+.platform-tag {
+  font-size: 22rpx;
+  padding: 4rpx 18rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
+.tag-pdd { background: #fff0e6; color: #e65c00; }
+.tag-douyin { background: #e6f7ff; color: #0088cc; }
+.tag-taobao { background: #fff0f0; color: #ff4400; }
+.tag-jd { background: #fff8e6; color: #d0011b; }
+.tag-kuaishou { background: #f0fff4; color: #ff6f00; }
+.tag-xiaohongshu { background: #fff0f5; color: #ff2442; }
+.tag-qita { background: #f5f5f5; color: #999; }
+
+.card-body {
+  margin-bottom: 16rpx;
+}
+
+.link-title {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+  line-height: 1.5;
+  word-break: break-all;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.link-url {
+  font-size: 26rpx;
+  color: #888;
+  line-height: 1.4;
+  word-break: break-all;
+  display: block;
+  background: #f8f8f8;
+  padding: 12rpx 16rpx;
+  border-radius: 8rpx;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.report-btn {
+  background: transparent;
+  color: #bbb;
+  font-size: 22rpx;
+  padding: 0 16rpx;
+  line-height: 48rpx;
+  height: 48rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 24rpx;
+}
+
+.delete-btn {
+  background: #fff2f2;
+  color: #ff4444;
+  font-size: 22rpx;
+  padding: 0 16rpx;
+  line-height: 48rpx;
+  height: 48rpx;
+  border: 1rpx solid #ffcccc;
+  border-radius: 24rpx;
+}
+
+.copy-btn {
+  background: #07c160;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 0 32rpx;
+  border-radius: 30rpx;
+  line-height: 56rpx;
+  height: 56rpx;
+  border: none;
+}
+
+.copy-btn.copied {
+  background: #e5e5e5;
+  color: #999;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 20rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 底部TabBar */
+.tabbar {
+  display: flex;
+  background: #fff;
+  border-top: 1rpx solid #eee;
+  flex-shrink: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tabbar .tab-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 0;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.tabbar .tab-item.active { color: #07c160; font-weight: 600; }

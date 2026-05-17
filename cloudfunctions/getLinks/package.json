@@ -1,0 +1,9 @@
+{
+  "name": "getLinks",
+  "version": "1.0.0",
+  "description": "获取助力链接列表",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

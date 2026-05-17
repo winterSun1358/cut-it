@@ -1,0 +1,9 @@
+{
+  "name": "adminDeleteLink",
+  "version": "1.0.0",
+  "description": "管理员删除助力链接",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

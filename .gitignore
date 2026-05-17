@@ -1,0 +1,18 @@
+# 微信开发者工具
+.DS_Store
+*.log
+node_modules/
+
+# 项目私有配置（含个人 appid 等信息）
+project.private.config.json
+
+# Claude 相关
+.claude/
+
+# 云函数 node_modules
+cloudfunctions/*/node_modules/
+
+# 临时文件
+*.swp
+*.swo
+*~

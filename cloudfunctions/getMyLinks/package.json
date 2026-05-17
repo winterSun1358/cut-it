@@ -1,0 +1,9 @@
+{
+  "name": "getMyLinks",
+  "version": "1.0.0",
+  "description": "获取我发布的链接",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

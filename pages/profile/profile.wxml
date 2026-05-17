@@ -1,0 +1,70 @@
+<view class="page">
+  <!-- 用户信息区域 -->
+  <view class="profile-header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="profile-top">
+      <text class="profile-title">我的</text>
+      <button wx:if="{{!editMode}}" class="edit-btn" size="mini" bindtap="onStartEdit">编辑资料</button>
+    </view>
+
+    <view class="profile-info">
+      <button wx:if="{{editMode}}" class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+      </button>
+      <image wx:else class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+
+      <view wx:if="{{editMode}}" class="edit-fields">
+        <input class="nickname-input" value="{{editNickName}}" bindinput="onNickNameInput" maxlength="20" placeholder="输入昵称" />
+        <view class="edit-actions">
+          <button class="cancel-btn" size="mini" bindtap="onCancelEdit">取消</button>
+          <button class="save-btn" size="mini" bindtap="onSaveProfile" loading="{{saving}}" disabled="{{saving}}">保存</button>
+        </view>
+      </view>
+      <view wx:else class="info-display">
+        <text class="nickname">{{userInfo.nickName}}</text>
+        <view class="quota-section">
+          <text class="quota-value">{{quota}}</text>
+          <text class="quota-unit">次额度</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发布记录 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">我发布的链接</text>
+      <text class="section-count">共 {{myLinks.length}} 条</text>
+    </view>
+
+    <!-- 进行中/已失效 筛选 -->
+    <view class="link-filter-bar">
+      <view class="filter-item {{linkFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="onSwitchLinkFilter">全部</view>
+      <view class="filter-item {{linkFilter === 'active' ? 'active' : ''}}" data-filter="active" bindtap="onSwitchLinkFilter">进行中</view>
+      <view class="filter-item {{linkFilter === 'expired' ? 'active' : ''}}" data-filter="expired" bindtap="onSwitchLinkFilter">已失效</view>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading"><text>加载中...</text></view>
+    <view wx:elif="{{filteredLinks.length === 0}}" class="empty"><text>暂无记录</text></view>
+
+    <view class="link-list" wx:else>
+      <view class="link-item" wx:for="{{filteredLinks}}" wx:key="_id">
+        <view class="link-info">
+          <text class="link-title">{{item.title}}</text>
+          <text class="link-status {{item.status}}">
+            {{item.status === 'active' ? '进行中' : '已失效'}}
+          </text>
+        </view>
+        <view class="link-url"><text class="url-text">{{item.url}}</text></view>
+        <view class="link-actions">
+          <button class="delete-btn" size="mini" data-id="{{item._id}}" bindtap="onDeleteLink">删除</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tabbar">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" data-index="0" bindtap="switchTab">助力大厅</view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" data-index="1" bindtap="switchTab">发布</view>
+    <view class="tab-item {{activeTab === 2 ? 'active' : ''}}" data-index="2" bindtap="switchTab">我的</view>
+  </view>
+</view>

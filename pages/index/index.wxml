@@ -1,0 +1,88 @@
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="header-inner">
+      <view class="header-title">助力大厅</view>
+      <view class="quota-badge" bindtap="switchTab" data-index="2">
+        <text class="quota-text">额度: {{quota}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 平台筛选标签 -->
+  <scroll-view class="platform-tabs" scroll-x enable-flex>
+    <view
+      class="tab-item {{currentPlatform === item.key ? 'active' : ''}}"
+      wx:for="{{platforms}}"
+      wx:for-key="key"
+      data-key="{{item.key}}"
+      bindtap="onSwitchPlatform"
+    >
+      <text>{{item.label}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 链接列表 -->
+  <scroll-view
+    class="list"
+    scroll-y
+    refresher-enabled
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onPullDownRefresh"
+    bindscrolltolower="onReachBottom"
+  >
+    <view wx:if="{{!loggedIn}}" class="login-prompt">
+      <text>正在登录...</text>
+    </view>
+
+    <view wx:elif="{{links.length === 0 && !loading}}" class="empty">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无助力链接</text>
+      <text class="empty-hint">切换到发布页面发布第一条链接</text>
+    </view>
+
+    <view class="link-list">
+      <view class="link-card" wx:for="{{links}}" wx:for-key="_id">
+        <view class="card-header">
+          <image class="avatar" src="{{item.publisherAvatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill" />
+          <text class="publisher-name">{{item.publisher}}</text>
+          <view class="platform-tag tag-{{item.platformClass}}">
+            <text>{{item.platform}}</text>
+          </view>
+        </view>
+
+        <view class="card-body">
+          <text class="link-title">{{item.title}}</text>
+          <text class="link-url">📋 {{item.url}}</text>
+        </view>
+
+        <view class="card-footer">
+          <view class="footer-left">
+            <button wx:if="{{isAdmin || myOpenid === item._openid}}" class="delete-btn" size="mini" bindtap="onAdminDelete" data-id="{{item._id}}" data-title="{{item.title}}">删除</button>
+            <button class="report-btn" size="mini" bindtap="onReport" data-id="{{item._id}}" data-title="{{item.title}}">举报</button>
+          </view>
+          <button class="copy-btn {{item.copied ? 'copied' : ''}}" size="mini" bindtap="onCopyLink" data-id="{{item._id}}" data-url="{{item.url}}" data-copied="{{item.copied}}" data-openid="{{item._openid}}" disabled="{{item.copied}}">
+            {{item.copied ? '已复制' : '复制口令'}}
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{loading && links.length > 0}}" class="loading-more">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
+
+  <!-- 底部TabBar -->
+  <view class="tabbar">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" data-index="0" bindtap="switchTab">
+      <text>助力大厅</text>
+    </view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" data-index="1" bindtap="switchTab">
+      <text>发布</text>
+    </view>
+    <view class="tab-item {{activeTab === 2 ? 'active' : ''}}" data-index="2" bindtap="switchTab">
+      <text>我的</text>
+    </view>
+  </view>
+</view>

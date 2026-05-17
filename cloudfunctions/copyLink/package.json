@@ -1,0 +1,9 @@
+{
+  "name": "copyLink",
+  "version": "1.0.0",
+  "description": "复制助力链接",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

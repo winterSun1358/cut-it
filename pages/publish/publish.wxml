@@ -1,0 +1,55 @@
+<view class="page">
+  <view class="header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="header-inner">
+      <text class="header-title">发布助力口令</text>
+      <view class="quota-display">额度: {{quota}}</view>
+    </view>
+  </view>
+
+  <view class="form">
+    <view class="form-item">
+      <text class="form-label">所属平台</text>
+      <picker class="form-picker" range="{{platforms}}" value="{{platformIndex}}" bindchange="onPlatformChange">
+        <view class="picker-display">
+          <text class="{{platform ? '' : 'placeholder'}}">{{platform || '选择平台'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">口令有效期</text>
+      <picker class="form-picker" range="{{expireOptions}}" range-key="label" value="{{expireIndex}}" bindchange="onExpireChange">
+        <view class="picker-display">
+          <text class="{{expireHours ? '' : 'placeholder'}}">{{expireHours ? expireOptions[expireIndex].label : '选择有效时长'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">链接标题</text>
+      <input class="form-input" placeholder="例如：帮我点一下拼多多助力" value="{{title}}" bindinput="onTitleInput" maxlength="100" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">助力口令</text>
+      <textarea class="form-textarea" placeholder="粘贴助力口令或链接地址" value="{{url}}" bindinput="onUrlInput" maxlength="500" auto-height />
+    </view>
+
+    <view class="form-hint">发布消耗 1 次额度，当前额度: {{quota}}</view>
+
+    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting || quota <= 0}}">
+      {{submitting ? '发布中...' : '发布口令'}}
+    </button>
+
+    <view wx:if="{{quota <= 0}}" class="no-quota-hint">额度不足，去助力大厅复制口令获取额度</view>
+  </view>
+
+  <!-- 底部TabBar -->
+  <view class="tabbar">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" data-index="0" bindtap="switchTab">助力大厅</view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" data-index="1" bindtap="switchTab">发布</view>
+    <view class="tab-item {{activeTab === 2 ? 'active' : ''}}" data-index="2" bindtap="switchTab">我的</view>
+  </view>
+</view>
