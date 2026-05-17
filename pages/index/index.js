@@ -139,42 +139,50 @@ Page({
     } catch (err) {}
   },
 
-  onCopyLink(e) {
+  async onCopyLink(e) {
     const { id: linkId, url, copied, openid: publisherOpenid } = e.currentTarget.dataset
-    if (copied) {
-      wx.showToast({ title: '已复制过', icon: 'none' })
+
+    // 先复制到剪贴板
+    try {
+      await wx.setClipboardData({ data: url })
+    } catch {
+      wx.showToast({ title: '复制失败，请重试', icon: 'error' })
       return
     }
-    const self = this
-    wx.setClipboardData({
-      data: url,
-      success() {
-        wx.cloud.callFunction({
-          name: 'copyLink',
-          data: { linkId, publisherOpenid },
-          success(res) {
-            if (res.result.success) {
-              self.setData({ quota: res.result.quota })
-              app.globalData.quota = res.result.quota
-              const links = self.data.links.map(l => {
-                if (l._id === linkId) l.copied = true
-                return l
-              })
-              self.setData({ links })
-              wx.showToast({ title: `+1额度！当前${res.result.quota}`, icon: 'success' })
-            } else {
-              wx.showToast({ title: res.result.message, icon: 'none' })
-            }
-          },
-          fail() {
-            wx.showToast({ title: '已复制，但获取额度失败', icon: 'none' })
-          }
+
+    // 已复制过的 → 仅提示，不获取额度
+    if (copied) {
+      wx.showToast({ title: '已复制，无法重复获取额度', icon: 'none' })
+      return
+    }
+
+    // 首次复制 → 尝试获取额度
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'copyLink',
+        data: { linkId, publisherOpenid }
+      })
+      if (res.result.success) {
+        this.setData({ quota: res.result.quota })
+        app.globalData.quota = res.result.quota
+        const links = this.data.links.map(l => {
+          if (l._id === linkId) l.copied = true
+          return l
         })
-      },
-      fail() {
-        wx.showToast({ title: '复制失败，请重试', icon: 'error' })
+        this.setData({ links })
+        wx.showToast({ title: `+1额度！当前${res.result.quota}`, icon: 'success' })
+      } else {
+        // copyLink 可能因已复制过而拒绝（兜底），但仍标记已复制
+        const links = this.data.links.map(l => {
+          if (l._id === linkId) l.copied = true
+          return l
+        })
+        this.setData({ links })
+        wx.showToast({ title: res.result.message || '已复制，但获取额度失败', icon: 'none' })
       }
-    })
+    } catch {
+      wx.showToast({ title: '已复制，但获取额度失败', icon: 'none' })
+    }
   },
 
   onReport(e) {

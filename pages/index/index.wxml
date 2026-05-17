@@ -67,7 +67,7 @@
             <button wx:elif="{{myOpenid === item._openid}}" class="delete-btn" size="mini" bindtap="onDeleteMyLink" data-id="{{item._id}}" data-title="{{item.title}}">删除</button>
             <button class="report-btn" size="mini" bindtap="onReport" data-id="{{item._id}}" data-title="{{item.title}}">举报</button>
           </view>
-          <button class="copy-btn {{item.copied ? 'copied' : ''}}" size="mini" bindtap="onCopyLink" data-id="{{item._id}}" data-url="{{item.url}}" data-copied="{{item.copied}}" data-openid="{{item._openid}}" disabled="{{item.copied}}">
+          <button class="copy-btn {{item.copied ? 'copied' : ''}}" size="mini" bindtap="onCopyLink" data-id="{{item._id}}" data-url="{{item.url}}" data-copied="{{item.copied}}" data-openid="{{item._openid}}">
             {{item.copied ? '已复制' : '复制口令'}}
           </button>
         </view>
